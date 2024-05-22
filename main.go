@@ -7,7 +7,7 @@ import (
 	"sync"
 
 	"github.com/younesious/mailinglist/db"
-	"github.com/younesious/mailinglist/jsonapi"
+	jsonapi "github.com/younesious/mailinglist/json_api"
 
 	_ "github.com/mattn/go-sqlite3"
 )

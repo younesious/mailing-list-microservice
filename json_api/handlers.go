@@ -26,6 +26,8 @@ func fromJson[T any](body io.Reader, target T) error {
 		return err
 	}
 	json.Unmarshal(buf.Bytes(), target)
+
+	return nil
 }
 
 func toJson[T any](w http.ResponseWriter, withDate func() (T, error)) {
