@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/younesious/mailinglist/db"
-	"github.com/younesious/mailinglist/email"
+	email "github.com/younesious/mailinglist/proto"
 )
 
 type EmailServiceServer struct {

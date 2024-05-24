@@ -10,7 +10,7 @@ import (
 	"github.com/younesious/mailinglist/db"
 	grpcapi "github.com/younesious/mailinglist/grpc_api"
 	jsonapi "github.com/younesious/mailinglist/json_api"
-	"github.com/younesious/mailinglist/proto/email"
+	email "github.com/younesious/mailinglist/proto"
 	"google.golang.org/grpc"
 
 	_ "github.com/mattn/go-sqlite3"
