@@ -35,30 +35,6 @@ func InitializeDB(db *sql.DB) error {
 	return nil
 }
 
-/*
-func emailEntryFromRows(rows *sql.Rows) (*EmailEntry, error) {
-	var entry EmailEntry
-	var optOutInt int
-
-	if !rows.Next() {
-		if err := rows.Err(); err != nil {
-			return nil, err
-		}
-		return nil, sql.ErrNoRows
-	}
-
-	err := rows.Scan(&entry.ID, &entry.Email, &entry.ConfirmedAt, &optOutInt)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-
-	entry.OptOut = optOutInt == 1
-
-	return &entry, nil
-}
-*/
-
 func emailEntryFromRows(rows *sql.Rows) (*EmailEntry, error) {
 	var entry EmailEntry
 	var optOutInt int
@@ -92,20 +68,6 @@ func AddEmailEntry(ctx context.Context, db *sql.DB, email string) (int64, error)
 
 	return result.LastInsertId()
 }
-
-/*
-func GetEmailEntry(ctx context.Context, db *sql.DB, email string) (*EmailEntry, error) {
-	query := `SELECT * FROM emails WHERE email = ?`
-	rows, err := db.QueryContext(ctx, query, email)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-	defer rows.Close()
-
-	return emailEntryFromRows(rows)
-}
-*/
 
 func GetEmailEntry(ctx context.Context, db *sql.DB, email string) (*EmailEntry, error) {
 	query := `SELECT * FROM emails WHERE email = ?`
@@ -167,38 +129,6 @@ func DeleteEmailEntry(ctx context.Context, db *sql.DB, email string) error {
 
 	return nil
 }
-
-/*
-func GetEmailBatch(ctx context.Context, db *sql.DB, params GetEmailBatchQueryParam) ([]EmailEntry, error) {
-	query := `SELECT * FROM emails WHERE opt_out = FALSE ORDER BY id LIMIT ? OFFSET ?`
-
-	rows, err := db.QueryContext(ctx, query, params.Count, (params.Page-1)*params.Count)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-	defer rows.Close()
-
-	emails := make([]EmailEntry, 0, params.Count)
-
-	for rows.Next() {
-		email, err := emailEntryFromRows(rows)
-		if err != nil {
-			log.Println(err)
-			return nil, err
-		}
-		log.Println(email)
-		emails = append(emails, *email)
-	}
-
-	if err := rows.Err(); err != nil {
-		log.Println(err)
-		return nil, err
-	}
-
-	return emails, nil
-}
-*/
 
 func GetEmailBatch(ctx context.Context, db *sql.DB, params GetEmailBatchQueryParam) ([]EmailEntry, error) {
 	query := `SELECT * FROM emails WHERE opt_out = FALSE ORDER BY id LIMIT ? OFFSET ?`

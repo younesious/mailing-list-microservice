@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package email;
+
+option go_package = "github.com/younesious/mailinglist/proto/email";
+
+message EmailEntry {
+    int64 id = 1;
+    string email = 2;
+    string confirmed_at = 3;
+    bool opt_out = 4;
+}
+
+message AddEmailRequest {
+    string email = 1;
+}
+
+message AddEmailResponse {
+    int64 id = 1;
+}
+
+message GetEmailRequest {
+    string email = 1;
+}
+
+message GetEmailResponse {
+    EmailEntry entry = 1;
+}
+
+message UpdateEmailRequest {
+    EmailEntry entry = 1;
+}
+
+message UpdateEmailResponse {
+    string message = 1;
+}
+
+message DeleteEmailRequest {
+    string email = 1;
+}
+
+message DeleteEmailResponse {
+    string message = 1;
+}
+
+message GetEmailBatchRequest {
+    int32 page = 1;
+    int32 count = 2;
+}
+
+message GetEmailBatchResponse {
+    repeated EmailEntry entries = 1;
+}
+
+service EmailService {
+    rpc AddEmail(AddEmailRequest) returns (AddEmailResponse) {}
+    rpc GetEmail(GetEmailRequest) returns (GetEmailResponse) {}
+    rpc UpdateEmail(UpdateEmailRequest) returns (UpdateEmailResponse) {}
+    rpc DeleteEmail(DeleteEmailRequest) returns (DeleteEmailResponse) {}
+    rpc GetEmailBatch(GetEmailBatchRequest) returns (GetEmailBatchResponse) {}
+}
