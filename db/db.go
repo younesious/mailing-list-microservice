@@ -5,12 +5,13 @@ import (
 	"database/sql"
 	"errors"
 	"log"
+	"time"
 )
 
 type EmailEntry struct {
 	ID          int64
 	Email       string
-	ConfirmedAt sql.NullTime
+	ConfirmedAt *time.Time
 	OptOut      bool
 }
 
@@ -104,8 +105,8 @@ func UpdateEmailEntry(ctx context.Context, db *sql.DB, entry EmailEntry) error {
 	}
 
 	var confirmedAt interface{}
-	if entry.ConfirmedAt.Valid {
-		confirmedAt = entry.ConfirmedAt.Time // Use the Time field from sql.NullTime
+	if entry.ConfirmedAt != nil {
+		confirmedAt = entry.ConfirmedAt
 	} else {
 		confirmedAt = nil
 	}
