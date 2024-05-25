@@ -8,7 +8,7 @@ import (
 	"sync"
 
 	"github.com/younesious/mailinglist/db"
-	grpcapi "github.com/younesious/mailinglist/grpc_api"
+	grpcapi "github.com/younesious/mailinglist/grpc_api/grpc_server"
 	jsonapi "github.com/younesious/mailinglist/json_api"
 	email "github.com/younesious/mailinglist/proto"
 	"google.golang.org/grpc"

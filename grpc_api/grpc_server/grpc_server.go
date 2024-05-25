@@ -3,7 +3,6 @@ package grpcapi
 import (
 	"context"
 	"database/sql"
-	"log"
 	"time"
 
 	"github.com/younesious/mailinglist/db"
@@ -64,7 +63,6 @@ func (s *EmailServiceServer) GetEmail(ctx context.Context, req *email.GetEmailRe
 
 func (s *EmailServiceServer) UpdateEmail(ctx context.Context, req *email.UpdateEmailRequest) (*email.UpdateEmailResponse, error) {
 	entry := protoToDb(req.Entry)
-	log.Printf("Updating email entry: %+v\n", entry)
 	err := db.UpdateEmailEntry(ctx, s.db, entry)
 	if err != nil {
 		return nil, err
