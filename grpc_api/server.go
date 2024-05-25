@@ -3,6 +3,7 @@ package grpcapi
 import (
 	"context"
 	"database/sql"
+	"log"
 	"time"
 
 	"github.com/younesious/mailinglist/db"
@@ -18,7 +19,7 @@ func NewEmailServiceServer(db *sql.DB) *EmailServiceServer {
 	return &EmailServiceServer{db: db}
 }
 
-func toGrpcEmailEntry(entry *db.EmailEntry) *email.EmailEntry {
+func dbToProto(entry *db.EmailEntry) *email.EmailEntry {
 	confirmedAt := int64(0)
 	if entry.ConfirmedAt != nil {
 		confirmedAt = entry.ConfirmedAt.Unix()
@@ -32,17 +33,13 @@ func toGrpcEmailEntry(entry *db.EmailEntry) *email.EmailEntry {
 	}
 }
 
-func toDbEmailEntry(entry *email.EmailEntry) *db.EmailEntry {
-	var confirmedAt *time.Time
-	if entry.ConfirmedAt != 0 {
-		t := time.Unix(entry.ConfirmedAt, 0)
-		confirmedAt = &t
-	}
+func protoToDb(entry *email.EmailEntry) db.EmailEntry {
+	confirmedAt := time.Unix(entry.ConfirmedAt, 0)
 
-	return &db.EmailEntry{
+	return db.EmailEntry{
 		ID:          entry.Id,
 		Email:       entry.Email,
-		ConfirmedAt: confirmedAt,
+		ConfirmedAt: &confirmedAt,
 		OptOut:      entry.OptOut,
 	}
 }
@@ -61,13 +58,14 @@ func (s *EmailServiceServer) GetEmail(ctx context.Context, req *email.GetEmailRe
 		return nil, err
 	}
 	return &email.GetEmailResponse{
-		Entry: toGrpcEmailEntry(entry),
+		Entry: dbToProto(entry),
 	}, nil
 }
 
 func (s *EmailServiceServer) UpdateEmail(ctx context.Context, req *email.UpdateEmailRequest) (*email.UpdateEmailResponse, error) {
-	entry := toDbEmailEntry(req.Entry)
-	err := db.UpdateEmailEntry(ctx, s.db, *entry)
+	entry := protoToDb(req.Entry)
+	log.Printf("Updating email entry: %+v\n", entry)
+	err := db.UpdateEmailEntry(ctx, s.db, entry)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +93,7 @@ func (s *EmailServiceServer) GetEmailBatch(ctx context.Context, req *email.GetEm
 
 	grpcEntries := make([]*email.EmailEntry, len(entries))
 	for i, entry := range entries {
-		grpcEntries[i] = toGrpcEmailEntry(&entry)
+		grpcEntries[i] = dbToProto(&entry)
 	}
 
 	return &email.GetEmailBatchResponse{Entries: grpcEntries}, nil
