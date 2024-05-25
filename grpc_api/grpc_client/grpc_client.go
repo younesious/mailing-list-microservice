@@ -10,7 +10,8 @@ import (
 )
 
 func main() {
-	conn, err := grpc.Dial("localhost:8081", grpc.WithInsecure())
+	conn, err := grpc.Dial("myserver:8081", grpc.WithInsecure()) // if you wanna run with docker-compose.yml and the server container name is myserver
+	// conn, err := grpc.Dial(":8081", grpc.WithInsecure())  # comment out if you wanna run in your local
 	if err != nil {
 		log.Fatalf("Failed to connect to gRPC server: %v", err)
 	}

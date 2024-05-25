@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: myserver
+    ports:
+      - "8080:8080"  # HTTP server port
+      - "8081:8081"  # gRPC server port
+    volumes:
+      - ./mailinglist.db:/app/mailinglist.db
+    networks:
+      - mynetwork
+
+  client:
+    build:
+      context: .
+      dockerfile: grpc_api/grpc_client/Dockerfile
+    networks:
+      - mynetwork  
+    depends_on:
+      - server
+
+networks:
+  mynetwork:
+    driver: bridge
+
