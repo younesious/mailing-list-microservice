@@ -4,11 +4,7 @@
 
 This project is a microservice-based mailing list management system built with Go, gRPC, and Docker. It includes an HTTP API for handling JSON requests and a gRPC API for more efficient communication between microservices. The system uses SQLite as its database.
 
-## Topics
-
-Go gRPC Docker Microservices SQLite HTTP
-
-## Project Structure`
+## Project Structure
 
 ```sh
 ├── db
